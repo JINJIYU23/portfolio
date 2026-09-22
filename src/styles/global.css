@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "./hallmark.css";
 
 @font-face {
   font-family: "GumiDotumTTF";
@@ -8,9 +9,6 @@
   font-style: normal;
 }
 
-body {
-  font-family: "GumiDotumTTF";
-}
 
 :root {
   --background: #1e1e1e;
@@ -33,3 +31,5 @@ body {
 .hide-scrollbar::-webkit-scrollbar {
   display: none;
 }
+
+/* Hallmark · legacy hex tokens kept for untouched components (ProfileCard, TextType, Aurora). Page CSS uses tokens.css. */

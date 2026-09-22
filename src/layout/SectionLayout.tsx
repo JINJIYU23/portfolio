@@ -1,25 +1,22 @@
 import type { ReactNode } from "react";
 
 interface SectionLayoutProps {
+  id?: string;
   title?: string;
+  lede?: string;
+  tight?: boolean;
   children: ReactNode;
 }
 
-export default function SectionLayout({ title, children }: SectionLayoutProps) {
+// Hallmark · section head: S2 Hanging — heading floats in negative space, no rule, no eyebrow
+export default function SectionLayout({ id, title, lede, tight, children }: SectionLayoutProps) {
   return (
-    <section
-      className="
-        w-full
-        max-w-[1200px] mx-auto
-        px-4 sm:px-4 md:px-8 lg:px-[60px]
-        flex flex-col justify-center items-center
-        mt-[100px] sm:mt-[150px] lg:mt-[250px]
-      "
-    >
+    <section id={id} className={`section hm-wrap${tight ? " section--tight" : ""}`}>
       {title && (
-        <h1 className="text-[24px] md:text-[32px] text-[var(--main-color-1)] py-[30px] sm:py-[40px] lg:py-[50px] text-center">
-          {title}
-        </h1>
+        <header className="head-hang">
+          <h2>{title}</h2>
+          {lede && <p>{lede}</p>}
+        </header>
       )}
       {children}
     </section>

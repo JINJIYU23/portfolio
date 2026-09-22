@@ -1,62 +1,77 @@
+import { useRef, useState } from "react";
 import Nayo from "../assets/images/nayo.png";
-import toast from "react-hot-toast";
 import SectionLayout from "../layout/SectionLayout";
-import useFadeIn from "../hooks/useFadeIn";
 
+type CopyState = "idle" | "copied" | "error";
+
+// Hallmark · contact: copy-to-clipboard swaps the inline hint (silent success, no toast)
 export default function Contact() {
-  const fadein = useFadeIn();
   const email = "dhkswksla22@gmail.com";
+  const [state, setState] = useState<CopyState>("idle");
+  const timer = useRef<number | null>(null);
 
-  const handleCopyEmail = () => {
-    navigator.clipboard.writeText(email).then(() => {
-      toast.success("이메일이 복사되었어요!");
-    });
+  const handleCopyEmail = async () => {
+    try {
+      await navigator.clipboard.writeText(email);
+      setState("copied");
+    } catch {
+      setState("error");
+    }
+    if (timer.current) window.clearTimeout(timer.current);
+    timer.current = window.setTimeout(() => setState("idle"), 2500);
   };
 
-  return (
-    <div {...fadein}>
-      <SectionLayout title="감사합니다!">
-        <div className="flex flex-col md:flex-row items-center justify-center mb-[100px] md:mb-[250px]">
-          <div className="flex-shrink-0 px-[50px] mb-[50px] md:mb-[20px]">
-            <img src={Nayo} alt="나요" className="w-[200px] h-auto" />
-          </div>
+  const hint =
+    state === "copied" ? "✓ 복사됨" : state === "error" ? "복사 실패. 직접 입력해 주세요" : "클릭해서 복사";
 
-          <div className="flex flex-col text-left px-[50px]">
-            <h1 className="text-[20px] text-[var(--main-color-1)] mb-[20px]">
-              다른 궁금한 점이 있다면,
-            </h1>
-            <ul className="space-y-3 text-[16px] text-[var(--white-color)]">
-              <li
-                onClick={handleCopyEmail}
-                className="cursor-pointer hover:text-[var(--point-color-1)] transition"
-              >
-                Email : {email}
-              </li>
-              <li>Phone : 010-3013-7923</li>
-              <li>
-                <a
-                  href="https://github.com/JINJIYU23"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hover:text-[var(--point-color-1)] transition"
-                >
-                  GitHub : github.com/JINJIYU23
-                </a>
-              </li>
-              <li>
-                <a
-                  href="https://flint-megaraptor-562.notion.site/1480d2b6eed180b9a46ded03bd59370d?pvs=74"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hover:text-[var(--point-color-1)] transition"
-                >
-                  Notion : 포트폴리오 바로가기
-                </a>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </SectionLayout>
-    </div>
+  return (
+    <SectionLayout id="contact" title="Thank You">
+      <div className="contact">
+        <ul className="contact__list">
+          <li className="contact__row">
+            <span className="contact__label">Email</span>
+            <span className="copy-wrap" data-state={state === "idle" ? undefined : state}>
+              <button type="button" className="copy-btn" onClick={handleCopyEmail}>
+                {email}
+              </button>
+              <span className="copy-btn__hint" aria-live="polite">
+                {hint}
+              </span>
+            </span>
+          </li>
+          <li className="contact__row">
+            <span className="contact__label">Phone</span>
+            <a className="contact__value" href="tel:01030137923">
+              010-3013-7923
+            </a>
+          </li>
+          <li className="contact__row">
+            <span className="contact__label">GitHub</span>
+            <a
+              className="contact__value"
+              href="https://github.com/JINJIYU23"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              github.com/JINJIYU23
+            </a>
+          </li>
+          <li className="contact__row">
+            <span className="contact__label">Notion</span>
+            <a
+              className="contact__value"
+              href="https://flint-megaraptor-562.notion.site/1480d2b6eed180b9a46ded03bd59370d?pvs=74"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              포트폴리오 바로가기
+            </a>
+          </li>
+        </ul>
+        <figure className="contact__figure">
+          <img src={Nayo} alt="마스코트 나요" width={569} height={560} loading="lazy" />
+        </figure>
+      </div>
+    </SectionLayout>
   );
 }
