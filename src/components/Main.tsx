@@ -1,10 +1,11 @@
 import Contact from "./Contact";
 import Experience from "./Experience";
+import Moments from "./Moments";
 import Moto from "./Moto";
 import Projects from "./Projects";
 import Skills from "./Skills";
 
-// Section order preserved from the original site.
+// Section order: About → Skills → Work → Experience → Moments → Contact
 export default function Main() {
   return (
     <main>
@@ -12,6 +13,7 @@ export default function Main() {
       <Skills />
       <Projects />
       <Experience />
+      <Moments />
       <Contact />
     </main>
   );
