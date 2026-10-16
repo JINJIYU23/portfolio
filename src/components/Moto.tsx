@@ -1,27 +1,29 @@
 import SectionLayout from "../layout/SectionLayout";
-import ProfileCard from "./ProfileCard";
+import IdCard from "./IdCard";
+import Reveal from "./Reveal";
 import jjy from "../assets/images/jiyuyuyu.jpeg";
 
-// Hallmark · about: diptych 5/7, photo left, two Q&A blocks. Emphasis carried by accent underline, not italics.
+const WHAT_I_AM = [
+  "아이디어를 화면에 그려내는 프론트엔드 개발자",
+  "사용자를 위한 고민을 끝까지 포기하지 않는 사람",
+  "빠른 변화에 민감하게, 유연하게 성장하는 사람",
+  "코드 리뷰와 피어 리뷰로 함께 자라는 팀원",
+];
+
+// About: lanyard ID card left, Q&A right.
 export default function Moto() {
   return (
-    <SectionLayout id="about" title="About Me">
+    <SectionLayout id="about" eyebrow="About" title="Hi, I'm" accent="Jiyu.">
       <div className="about">
-        <ProfileCard
+        <IdCard
           imageSrc={jjy}
           altText="정지유의 프로필 사진"
-          captionText="정지유"
-          containerHeight="400px"
-          containerWidth="300px"
-          imageHeight="400px"
-          imageWidth="300px"
-          rotateAmplitude={8}
-          scaleOnHover={1.03}
-          showMobileWarning={false}
-          showTooltip={false}
-          displayOverlayContent={false}
+          name="정지유"
+          role="Frontend Developer"
+          id="JIYU · FE · 2025"
+          checklist={WHAT_I_AM}
         />
-        <div className="about__body">
+        <Reveal className="about__body" index={1}>
           <h3 className="about__q">
             여러 개발 분야 중 프론트엔드를 선택하게 된 이유는 무엇인가요?
           </h3>
@@ -45,7 +47,10 @@ export default function Moto() {
             입니다. 저는 앞으로 변화에 민감하게 반응하며 유연하게 성장해
             나가되, 이 가치를 소중히 여기는 개발자가 되고 싶습니다.
           </p>
-        </div>
+          <blockquote className="about__quote">
+            From the idea to the last pixel.
+          </blockquote>
+        </Reveal>
       </div>
     </SectionLayout>
   );

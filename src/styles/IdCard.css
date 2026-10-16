@@ -1,0 +1,108 @@
+/* About: lanyard ID card. Paper tokens only; accent = strap + checkmarks. */
+.idcard {
+  --card-w: 17rem;
+  --card-h: 25rem;
+  --strap-h: 9rem;
+  position: relative;
+  width: var(--card-w);
+  height: calc(var(--card-h) + var(--strap-h) + 1.5rem);
+  perspective: 1200px;
+  user-select: none;
+}
+
+/* Everything below the anchor swings around the strap top. */
+.idcard__hang {
+  position: absolute; inset-inline: 0; top: 0;
+  display: grid; justify-items: center;
+  transform-origin: 50% 0;
+  will-change: transform;
+}
+
+.idcard__strap {
+  width: 1.1rem; height: var(--strap-h);
+  background:
+    repeating-linear-gradient(180deg, transparent 0 0.6rem, oklch(100% 0 0 / 0.08) 0.6rem 0.75rem),
+    linear-gradient(90deg, color-mix(in oklch, var(--color-accent) 75%, black) 0%, var(--color-accent) 45%, color-mix(in oklch, var(--color-accent) 70%, black) 100%);
+  border-radius: 0 0 2px 2px;
+  box-shadow: 0 6px 14px -8px var(--glass-shadow);
+  /* fade the top so it reads as continuing up out of the section (from the hero thread) */
+  mask-image: linear-gradient(to bottom, transparent, black 25%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent, black 25%);
+}
+.idcard__clip {
+  width: 2.4rem; height: 1.1rem; margin-top: -0.2rem;
+  background: linear-gradient(180deg, oklch(78% 0.006 290), oklch(55% 0.006 290));
+  border-radius: 4px 4px 6px 6px;
+  box-shadow: inset 0 1px 0 oklch(100% 0 0 / 0.5), 0 2px 4px oklch(0% 0 0 / 0.4);
+}
+
+.idcard__card {
+  width: var(--card-w); height: var(--card-h); margin-top: -0.25rem;
+  padding: 0; border: 0; background: transparent; cursor: pointer;
+  perspective: 1200px; transform-style: preserve-3d;
+  border-radius: var(--radius-glass);
+  will-change: transform;
+}
+.idcard__card:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 4px; }
+
+.idcard__faces { position: relative; width: 100%; height: 100%; transform-style: preserve-3d; }
+.idcard__face {
+  position: absolute; inset: 0;
+  display: grid; align-content: start; justify-items: center; gap: var(--space-xs);
+  padding: var(--space-lg) var(--space-lg) var(--space-md);
+  background: var(--color-paper-2);
+  border: var(--rule-hair) solid var(--color-rule);
+  border-radius: var(--radius-glass);
+  box-shadow: inset 0 1px 0 var(--glass-hi), 0 30px 60px -30px var(--glass-shadow);
+  backface-visibility: hidden; -webkit-backface-visibility: hidden;
+  text-align: center;
+  transition: background-color var(--dur-short) var(--ease-out);
+}
+.idcard__back { transform: rotateY(180deg); justify-items: start; text-align: start; }
+
+.idcard__hole {
+  width: 2.2rem; height: 0.5rem; border-radius: var(--radius-pill);
+  background: var(--color-paper); box-shadow: inset 0 1px 2px oklch(0% 0 0 / 0.6);
+  margin-block-end: var(--space-2xs);
+}
+.idcard__back .idcard__hole { justify-self: center; }
+.idcard__label { font-family: var(--font-mono); font-size: 0.65rem; letter-spacing: 0.18em; color: var(--color-muted); }
+.idcard__back .idcard__label { justify-self: start; margin-block-start: var(--space-xs); }
+
+.idcard__photo {
+  width: 10.5rem; height: 10.5rem; object-fit: cover; border-radius: 16px;
+  border: var(--rule-hair) solid var(--color-rule-2);
+  margin-block-start: var(--space-xs);
+}
+.idcard__name { font-family: var(--font-display); font-weight: 700; font-size: var(--text-xl); letter-spacing: -0.02em; margin-block-start: var(--space-sm); color: var(--color-ink); }
+.idcard__role { font-size: var(--text-sm); color: var(--color-ink-2); }
+.idcard__barcode {
+  width: 9rem; height: 1.6rem; margin-block-start: var(--space-sm);
+  background: repeating-linear-gradient(90deg, var(--color-ink-2) 0 2px, transparent 2px 4px, var(--color-ink-2) 4px 5px, transparent 5px 8px, var(--color-ink-2) 8px 11px, transparent 11px 13px);
+  opacity: 0.7;
+}
+.idcard__id { font-family: var(--font-mono); font-size: 0.65rem; color: var(--color-muted); letter-spacing: 0.14em; }
+
+.idcard__list { list-style: none; margin: var(--space-xs) 0 0; padding: 0; display: grid; gap: var(--space-sm); width: 100%; }
+.idcard__list li { position: relative; padding-inline-start: 1.8em; font-size: var(--text-sm); color: var(--color-ink-2); line-height: 1.45; }
+.idcard__list li::before {
+  content: ""; position: absolute; left: 0; top: 0.1em; width: 1.1em; height: 1.1em;
+  border-radius: 4px; border: var(--rule-hair) solid var(--color-rule-2); background: var(--color-paper);
+}
+.idcard__list li::after {
+  content: ""; position: absolute; left: 0.38em; top: 0.18em; width: 0.32em; height: 0.65em;
+  border: solid var(--color-accent); border-width: 0 2px 2px 0; transform: rotate(45deg);
+}
+.idcard__sign {
+  position: absolute; right: var(--space-lg); bottom: var(--space-md);
+  font-family: var(--font-accent); font-style: italic; font-size: var(--text-xl); color: var(--color-accent);
+  transform: rotate(-6deg);
+}
+
+@media (hover: hover) {
+  .idcard__card:hover .idcard__face { background: var(--color-paper-3); }
+}
+@media (max-width: 40rem) {
+  .idcard { --card-w: 15rem; --card-h: 22rem; --strap-h: 5rem; }
+  .idcard__photo { width: 8.5rem; height: 8.5rem; }
+}
