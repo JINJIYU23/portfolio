@@ -10,6 +10,9 @@ export default function Nav() {
           <a href="#about">About</a>
         </li>
         <li>
+          <a href="#work">Work</a>
+        </li>
+        <li>
           <a href="#projects">Projects</a>
         </li>
         <li>

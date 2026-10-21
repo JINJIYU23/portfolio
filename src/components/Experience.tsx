@@ -27,8 +27,19 @@ const ExperienceItem = ({ date, title, tag, details }: Props) => (
 
 export default function Experience() {
   return (
-    <SectionLayout id="experience" title="Education / Experience">
+    <SectionLayout id="experience" title="Experience / Education">
       <ol className="xp">
+        <ExperienceItem
+          date="2025.09 – 재직중"
+          title="바이언스 (VIENCE)"
+          tag="연구개발 프론트엔드 개발자 · 정규직"
+          details={[
+            "병리 이미지 AI 분석 플랫폼(VIENCE PATHO VIEWER)의 QC Dashboard, Worksheet, AI Assistant 모듈 단독 기획·설계·개발",
+            "onnxruntime-web 브라우저 추론 파이프라인 구축·운영 후 서버 추론 전환 주도",
+            "노코드 분석 플랫폼(VIENCE CANVAS)의 Vega-Lite 차트 에디터와 OpenCV.js 이미지 분석 모듈 개발",
+            "화면 구조와 API 계약을 직접 설계한 뒤 구현 초안을 Claude Code에 위임하는 방식으로 개발 속도 향상",
+          ]}
+        />
         <ExperienceItem
           date="2021.03 – 2025.02"
           title="삼육대학교"
@@ -56,7 +67,7 @@ export default function Experience() {
           ]}
         />
         <ExperienceItem
-          date="2025.02.29 – 2025.08.04"
+          date="2025.02 – 2025.08"
           title="프로그래머스 프론트엔드 데브코스"
           tag="교육 이수"
           details={[

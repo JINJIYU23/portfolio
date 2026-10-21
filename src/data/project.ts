@@ -41,8 +41,11 @@ import { CiBaseball } from "react-icons/ci";
 import { MdEmojiEmotions } from "react-icons/md";
 import { PiCatFill } from "react-icons/pi";
 
-const projectItems = [
+import type { ProjectItem } from "../types/projectType";
+
+const projectItems: ProjectItem[] = [
   {
+    kind: "project",
     title: "티태",
     description: "챌린지를 통해 자산을 관리하는 실천형 가계부",
     bgColor: "rgba(107, 118, 255, 0.5)",
@@ -179,7 +182,7 @@ const projectItems = [
           {
             name: null,
             details: [
-              "CSS-in-JS: Tailwind CSS를 활용한 유틸리티 퍼스트 접근법",
+              "스타일링: Tailwind CSS 기반 유틸리티 퍼스트 접근법",
               "시스템 설정 감지: matchMedia API를 통한 시스템 다크 모드 감지",
               "테마 지속성: Next.js의 쿠키를 활용한 서버 사이드 테마 상태 유지",
             ],
@@ -244,6 +247,7 @@ const projectItems = [
     ],
   },
   {
+    kind: "project",
     title: "SomePick",
     description: "커플, 솔로 모두를 위한 연애 플랫폼",
     bgColor: "rgba(255, 199, 237, 0.5)",
@@ -322,6 +326,7 @@ const projectItems = [
     ],
   },
   {
+    kind: "project",
     title: "TouchBase",
     description: "KBO팬들을 위한 야구 커뮤니티",
     bgColor: "rgba(0, 51, 160, 1)",
@@ -415,6 +420,7 @@ const projectItems = [
     ],
   },
   {
+    kind: "project",
     title: "이모지 추천기 Emoji",
     description:
       "검색어에 따라 Gemini를 사용해 이모지를 추천해주는 이모지 추천기 emoji",
@@ -472,6 +478,7 @@ const projectItems = [
     ],
   },
   {
+    kind: "project",
     title: "나와 어울리는 고양이 찾기",
     description: "MBTI 테스트로 알아보는 나와 어울리는 고양이 찾기!",
     bgColor: "rgba(255, 205, 188, 0.5)",
@@ -494,7 +501,7 @@ const projectItems = [
           {
             name: null,
             details: [
-              "React SSR의 기능 개발 체감",
+              "React + Vite 기반 SPA 구조로 클라이언트 사이드 렌더링 구현",
               "Vercel 배포",
               "카카오톡 공유하기 API 연동",
               "반응형 홈페이지 제작",
