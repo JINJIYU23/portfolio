@@ -1,24 +1,42 @@
-import { useEffect, useRef, useState, type CSSProperties } from "react";
+import { useEffect, useRef, type CSSProperties } from "react";
 import Jeongjoo from "../assets/images/jeongjoo.png";
 import Aurora from "../components/Aurora";
 import TextType from "../components/TextType";
 import Main from "../components/Main";
 import Nav from "../components/Nav";
+import useReducedMotion from "../hooks/useReducedMotion";
 
 const GREETINGS = ["Hello, World!", "안녕하세요! 프론트엔드 개발자 정지유입니다."];
 
-// Hallmark · hero: centred atmospheric marquee (genre-allowed) · canvas = WebGL aurora + HP3 cursor spotlight · typed display line
+// Hero: centred atmospheric marquee · WebGL aurora + cursor spotlight · typed display line.
+// Scroll: ghost wordmark (0.45×) and mascot (0.18×) parallax; a lanyard thread grows from the mascot's feet toward About.
 export default function Layout() {
   const heroRef = useRef<HTMLElement>(null);
-  const [reduceMotion, setReduceMotion] = useState(false);
+  const reduceMotion = useReducedMotion();
 
   useEffect(() => {
-    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-    setReduceMotion(mq.matches);
-    const onChange = (e: MediaQueryListEvent) => setReduceMotion(e.matches);
-    mq.addEventListener("change", onChange);
-    return () => mq.removeEventListener("change", onChange);
-  }, []);
+    const el = heroRef.current;
+    if (!el || reduceMotion) return;
+    let raf = 0;
+    const update = () => {
+      raf = 0;
+      const h = el.offsetHeight;
+      const y = Math.min(window.scrollY, h);
+      el.style.setProperty("--scroll", `${y}px`);
+      el.style.setProperty("--progress", `${Math.min(1, y / (h * 0.6))}`);
+    };
+    const onScroll = () => {
+      if (!raf) raf = requestAnimationFrame(update);
+    };
+    update();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      if (raf) cancelAnimationFrame(raf);
+      el.style.removeProperty("--scroll");
+      el.style.removeProperty("--progress");
+    };
+  }, [reduceMotion]);
 
   const handleMove = (e: React.MouseEvent<HTMLElement>) => {
     const el = heroRef.current;
@@ -49,15 +67,24 @@ export default function Layout() {
           <div className="hero__spotlight" aria-hidden="true" />
 
           <div className="hm-wrap hero__inner">
-            <img
-              className="hero__mascot hm-reveal"
-              style={{ "--i": 0 } as CSSProperties}
-              src={Jeongjoo}
-              alt="정지유의 마스코트 정주"
-              width={480}
-              height={533}
-              fetchPriority="high"
-            />
+            <p className="eyebrow hero__eyebrow hm-reveal" style={{ "--i": 0 } as CSSProperties}>
+              Frontend Developer · Portfolio
+            </p>
+            <div className="hero__stage">
+              <span className="hero__ghost hm-reveal" aria-hidden="true">
+                JIYU
+              </span>
+              <img
+                className="hero__mascot hm-reveal"
+                style={{ "--i": 0 } as CSSProperties}
+                src={Jeongjoo}
+                alt="정지유의 마스코트 정주"
+                width={480}
+                height={533}
+                fetchPriority="high"
+              />
+              <span className="hero__thread" aria-hidden="true" />
+            </div>
             <h1 className="hero__title hm-reveal" style={{ "--i": 1 } as CSSProperties}>
               {reduceMotion ? (
                 GREETINGS[1]

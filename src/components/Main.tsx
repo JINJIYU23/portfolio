@@ -1,5 +1,6 @@
 import Contact from "./Contact";
 import Experience from "./Experience";
+import Moments from "./Moments";
 import Moto from "./Moto";
 import Projects from "./Projects";
 import Skills from "./Skills";
@@ -14,6 +15,7 @@ export default function Main() {
       <Work />
       <Projects />
       <Experience />
+      <Moments />
       <Contact />
     </main>
   );

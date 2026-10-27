@@ -1,14 +1,17 @@
 import { useRef, useState } from "react";
 import Nayo from "../assets/images/nayo.png";
 import SectionLayout from "../layout/SectionLayout";
+import Reveal from "./Reveal";
 
 type CopyState = "idle" | "copied" | "error";
 
-// Hallmark · contact: copy-to-clipboard swaps the inline hint (silent success, no toast)
+// Contact: full-height statement title, then the list. A single highlight band slides to whichever row is hovered.
 export default function Contact() {
   const email = "dhkswksla22@gmail.com";
   const [state, setState] = useState<CopyState>("idle");
   const timer = useRef<number | null>(null);
+  const listRef = useRef<HTMLUListElement>(null);
+  const [band, setBand] = useState<{ top: number; height: number } | null>(null);
 
   const handleCopyEmail = async () => {
     try {
@@ -21,14 +24,30 @@ export default function Contact() {
     timer.current = window.setTimeout(() => setState("idle"), 2500);
   };
 
+  const moveBand = (e: React.MouseEvent<HTMLLIElement>) => {
+    const row = e.currentTarget;
+    setBand({ top: row.offsetTop, height: row.offsetHeight });
+  };
+
   const hint =
     state === "copied" ? "✓ 복사됨" : state === "error" ? "복사 실패. 직접 입력해 주세요" : "클릭해서 복사";
 
   return (
-    <SectionLayout id="contact" title="Thank You">
-      <div className="contact">
-        <ul className="contact__list">
-          <li className="contact__row">
+    <SectionLayout
+      id="contact"
+      eyebrow="Contact"
+      title="Let's build something"
+      accent="together."
+      className="section--contact"
+    >
+      <Reveal className="contact">
+        <ul className="contact__list" ref={listRef} onMouseLeave={() => setBand(null)}>
+          <span
+            className="contact__band"
+            aria-hidden="true"
+            style={band ? { top: band.top, height: band.height, opacity: 1 } : undefined}
+          />
+          <li className="contact__row" onMouseEnter={moveBand}>
             <span className="contact__label">Email</span>
             <span className="copy-wrap" data-state={state === "idle" ? undefined : state}>
               <button type="button" className="copy-btn" onClick={handleCopyEmail}>
@@ -39,13 +58,13 @@ export default function Contact() {
               </span>
             </span>
           </li>
-          <li className="contact__row">
+          <li className="contact__row" onMouseEnter={moveBand}>
             <span className="contact__label">Phone</span>
             <a className="contact__value" href="tel:01030137923">
               010-3013-7923
             </a>
           </li>
-          <li className="contact__row">
+          <li className="contact__row" onMouseEnter={moveBand}>
             <span className="contact__label">GitHub</span>
             <a
               className="contact__value"
@@ -56,7 +75,7 @@ export default function Contact() {
               github.com/JINJIYU23
             </a>
           </li>
-          <li className="contact__row">
+          <li className="contact__row" onMouseEnter={moveBand}>
             <span className="contact__label">Notion</span>
             <a
               className="contact__value"
@@ -71,7 +90,7 @@ export default function Contact() {
         <figure className="contact__figure">
           <img src={Nayo} alt="마스코트 나요" width={569} height={560} loading="lazy" />
         </figure>
-      </div>
+      </Reveal>
     </SectionLayout>
   );
 }

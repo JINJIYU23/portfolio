@@ -9,9 +9,13 @@
  * Hallmark · pre-emit critique: P4 H4 E4 S4 R4 V4
  */
 @import "./tokens.css";
+@import "./effects.css";
 
 /* ---------- base ---------- */
 html { overflow-x: clip; scroll-behavior: smooth; }
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-stopped { overflow: hidden; }
 body {
   overflow-x: clip;
   margin: 0;

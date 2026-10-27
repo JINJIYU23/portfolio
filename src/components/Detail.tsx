@@ -39,6 +39,7 @@ export default function Detail({
     <dialog
       ref={ref}
       className="case"
+      data-lenis-prevent
       aria-labelledby="case-title"
       onClose={onClose}
       onClick={(e) => {

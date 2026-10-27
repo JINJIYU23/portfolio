@@ -34,6 +34,8 @@
   --font-display: "Bricolage Grotesque", "IBM Plex Sans KR", ui-sans-serif, system-ui, sans-serif;
   --font-body:    "IBM Plex Sans KR", ui-sans-serif, system-ui, sans-serif;
   --font-outlier: "GumiDotumTTF", "IBM Plex Sans KR", ui-sans-serif, sans-serif; /* wordmark + hero greeting only */
+  --font-accent:  "Instrument Serif", "Noto Serif KR", Georgia, serif; /* italic accent word in section titles */
+  --font-mono:    "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace; /* eyebrow labels, numbers */
 
   /* Type scale — 1.25 */
   --text-xs:   0.8rem;
