@@ -10,10 +10,11 @@ const WHAT_I_AM = [
   "코드 리뷰와 피어 리뷰로 함께 자라는 팀원",
 ];
 
-// About: lanyard ID card left, Q&A right.
+// About: the Experience spine runs into the lanyard, so the ID card hangs centred at the very top;
+// the section title and Q&A follow underneath.
 export default function Moto() {
   return (
-    <SectionLayout id="about" eyebrow="About" title="Hi, I'm" accent="Jiyu.">
+    <SectionLayout id="about" className="section--about">
       <div className="about">
         <IdCard
           imageSrc={jjy}
@@ -23,6 +24,12 @@ export default function Moto() {
           id="JIYU · FE · 2025"
           checklist={WHAT_I_AM}
         />
+        <Reveal as="header" className="head-hang about__head">
+          <p className="eyebrow">About</p>
+          <h2>
+            Hi, I'm <em className="head-accent">Jiyu.</em>
+          </h2>
+        </Reveal>
         <Reveal className="about__body" index={1}>
           <h3 className="about__q">
             여러 개발 분야 중 프론트엔드를 선택하게 된 이유는 무엇인가요?

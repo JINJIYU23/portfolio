@@ -6,15 +6,16 @@ import Projects from "./Projects";
 import Skills from "./Skills";
 import Work from "./Work";
 
-// 실무(Work)를 프로젝트보다 앞에 둔다.
+// Section order: Experience (the hero thread runs down its spine) → About (ID card drops off the end)
+// → Skills → Work (실무, 프로젝트보다 앞) → Projects → Moments → Contact
 export default function Main() {
   return (
     <main>
+      <Experience />
       <Moto />
       <Skills />
       <Work />
       <Projects />
-      <Experience />
       <Moments />
       <Contact />
     </main>

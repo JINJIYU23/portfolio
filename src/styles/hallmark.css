@@ -90,7 +90,7 @@ img { display: block; max-width: 100%; height: auto; }
 }
 
 /* ---------- hero · centred atmospheric marquee · WebGL aurora canvas + HP3 cursor spotlight ---------- */
-.hero { --hero-fade: linear-gradient(to bottom, black 25%, rgb(0 0 0 / 0.75) 50%, rgb(0 0 0 / 0.4) 68%, rgb(0 0 0 / 0.15) 82%, rgb(0 0 0 / 0.04) 92%, transparent 100%); position: relative; isolation: isolate; overflow: hidden; text-align: center; padding-block: calc(var(--space-3xl) + var(--space-lg)) calc(var(--space-4xl) + var(--space-md)); } /* gate 44: bottom ≥ 1.3× top */
+.hero { --hero-fade: linear-gradient(to bottom, black 25%, rgb(0 0 0 / 0.75) 50%, rgb(0 0 0 / 0.4) 68%, rgb(0 0 0 / 0.15) 82%, rgb(0 0 0 / 0.04) 92%, transparent 100%); position: relative; isolation: isolate; overflow: hidden; text-align: center; min-height: 100svh; display: grid; align-content: center; padding-block: calc(var(--space-3xl) + var(--space-lg)) calc(var(--space-4xl) + var(--space-md)); } /* one full screen, content vertically centred; gate 44: bottom ≥ 1.3× top */
 .hero__aurora { position: absolute; inset: 0; z-index: -2; pointer-events: none; mask-image: var(--hero-fade); -webkit-mask-image: var(--hero-fade); }
 .hero__spotlight { position: absolute; inset: 0; z-index: -1; pointer-events: none; background: radial-gradient(520px circle at var(--mx, 50%) var(--my, 40%), color-mix(in oklch, var(--color-accent) 20%, transparent), transparent 60%); transition: background var(--dur-short) var(--ease-out); mask-image: var(--hero-fade); -webkit-mask-image: var(--hero-fade); }
 .hero__inner { display: grid; justify-items: center; }
@@ -175,14 +175,15 @@ button:disabled, [aria-disabled="true"] { opacity: 0.5; cursor: not-allowed; poi
 .link-plain { display: inline-flex; align-items: center; gap: 0.3em; min-height: 40px; padding-inline: var(--space-xs); color: var(--color-ink-2); font-size: var(--text-sm); text-decoration: underline; text-decoration-color: var(--color-rule-2); text-underline-offset: 0.2em; white-space: nowrap; border-radius: var(--radius-input); transition: color var(--dur-micro) var(--ease-out), text-decoration-color var(--dur-micro) var(--ease-out); }
 @media (hover: hover) { .link-plain:hover { color: var(--color-ink); text-decoration-color: var(--color-accent); } }
 
-/* ---------- about · diptych, photo left ---------- */
-.about { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--space-2xl); align-items: center; max-width: 60rem; margin-inline: auto; }
-.about__body { max-width: var(--measure); }
+/* ---------- about · ID card hangs centred from the hero thread, text below ---------- */
+.section--about { padding-block-start: 0; }
+.about { display: grid; justify-items: center; max-width: 60rem; margin-inline: auto; }
+.about__head { margin-block-start: var(--space-2xl); padding-block-end: 0; }
+.about__body { max-width: var(--measure); margin-block-start: var(--space-xl); }
 .about__q { font-size: var(--text-lg); margin-block-start: var(--space-xl); }
 .about__q:first-child { margin-block-start: 0; }
 .about__a { margin-block-start: var(--space-sm); color: var(--color-ink-2); }
 .about__a mark { background: transparent; color: var(--color-ink); font-weight: 600; text-decoration: underline; text-decoration-color: var(--color-accent); text-decoration-thickness: 2px; text-underline-offset: 0.2em; }
-@media (max-width: 56rem) { .about { grid-template-columns: minmax(0, 1fr); gap: var(--space-xl); justify-items: center; } }
 
 /* ---------- skills · inline chips with visible labels ---------- */
 .skills { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--space-xs); list-style: none; margin: 0 auto; padding: 0; max-width: 56rem; }

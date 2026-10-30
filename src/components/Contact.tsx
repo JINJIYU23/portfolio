@@ -35,9 +35,10 @@ export default function Contact() {
   return (
     <SectionLayout
       id="contact"
-      eyebrow="Contact"
+      eyebrow="Next · Your team?"
       title="Let's build something"
       accent="together."
+      lede="다음 줄은 함께 쓰고 싶어요."
       className="section--contact"
     >
       <Reveal className="contact">

@@ -138,10 +138,10 @@ export default function Aurora(props: AuroraProps) {
       antialias: true,
     });
     const gl = renderer.gl;
-    gl.clearColor(0.118, 0.118, 0.118, 1);
+    // Transparent canvas: the page's paper colour shows through, so there is no seam where the canvas ends.
+    gl.clearColor(0, 0, 0, 0);
     gl.enable(gl.BLEND);
     gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
-    gl.canvas.style.backgroundColor = "#1e1e1e";
 
     function resize() {
       if (!ctn) return;
@@ -153,6 +153,9 @@ export default function Aurora(props: AuroraProps) {
       }
     }
     window.addEventListener("resize", resize);
+    // The hero can grow after mount (fonts, min-height); keep the canvas covering it.
+    const ro = new ResizeObserver(resize);
+    ro.observe(ctn);
 
     const geometry = new Triangle(gl);
     if (geometry.attributes.uv) {
@@ -202,6 +205,7 @@ export default function Aurora(props: AuroraProps) {
     return () => {
       cancelAnimationFrame(animateId);
       window.removeEventListener("resize", resize);
+      ro.disconnect();
       if (ctn && gl.canvas.parentNode === ctn) {
         ctn.removeChild(gl.canvas);
       }

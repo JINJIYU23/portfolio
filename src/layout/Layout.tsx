@@ -9,7 +9,7 @@ import useReducedMotion from "../hooks/useReducedMotion";
 const GREETINGS = ["Hello, World!", "안녕하세요! 프론트엔드 개발자 정지유입니다."];
 
 // Hero: centred atmospheric marquee · WebGL aurora + cursor spotlight · typed display line.
-// Scroll: ghost wordmark (0.45×) and mascot (0.18×) parallax; a lanyard thread grows from the mascot's feet toward About.
+// Scroll: mascot (0.18×) parallax; a lanyard thread grows from the mascot's feet into the Experience spine.
 export default function Layout() {
   const heroRef = useRef<HTMLElement>(null);
   const reduceMotion = useReducedMotion();
@@ -23,7 +23,7 @@ export default function Layout() {
       const h = el.offsetHeight;
       const y = Math.min(window.scrollY, h);
       el.style.setProperty("--scroll", `${y}px`);
-      el.style.setProperty("--progress", `${Math.min(1, y / (h * 0.6))}`);
+      el.style.setProperty("--progress", `${Math.min(1, y / (h * 0.35))}`);
     };
     const onScroll = () => {
       if (!raf) raf = requestAnimationFrame(update);
@@ -71,9 +71,6 @@ export default function Layout() {
               Frontend Developer · Portfolio
             </p>
             <div className="hero__stage">
-              <span className="hero__ghost hm-reveal" aria-hidden="true">
-                JIYU
-              </span>
               <img
                 className="hero__mascot hm-reveal"
                 style={{ "--i": 0 } as CSSProperties}

@@ -1,5 +1,7 @@
 /* Hallmark · tokens · theme: Aurora (atmospheric) · neutrals: cool-neutral (hue 290, chroma 0.006) · paper-band: dark · display-style: display-heavy (Bricolage Grotesque) · accent-hue: warm (pink 5°) */
 :root {
+  /* Lanyard cord: hero thread, Experience spine, ID card strap share this width. */
+  --cord-w: 0.3rem;
   /* Paper — dark, tinted toward the pink anchor. Elevation = lighter. */
   --color-paper:      oklch(15% 0.006 290);
   --color-paper-2:    oklch(29% 0.006 290);
