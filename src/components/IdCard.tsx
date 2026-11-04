@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { motion, useMotionValue, useSpring, useTransform } from "motion/react";
+import { animate, motion, useMotionValue, useSpring, useTransform } from "motion/react";
 import useReducedMotion from "../hooks/useReducedMotion";
 import "../styles/IdCard.css";
 
@@ -16,6 +16,15 @@ interface IdCardProps {
 const swing = { stiffness: 90, damping: 14, mass: 1.2 };
 const clamp = (v: number, lim = 1) => Math.max(-lim, Math.min(lim, v));
 
+const DROP_FROM = -720; // starts well above the section, so it slides a long way down the hero thread
+const DROP_DELAY = 0.25; // card lets go while the strap is still whipping down
+const DROP_DURATION = 1.35;
+const CATCH_AT = 0.52; // fraction of DROP_DURATION where the lanyard snaps taut (~0.7s of free fall)
+/** Free fall accelerates past the rest point, then the strap yanks it back with decaying bounces. */
+const dropKeyframes = [DROP_FROM, 48, -22, 12, -6, 2, 0];
+const dropTimes = [0, CATCH_AT, 0.63, 0.74, 0.85, 0.94, 1];
+const dropEase = [[0.6, 0, 1, 0.5], "easeOut", "easeIn", "easeOut", "easeIn", "easeOut"] as const;
+
 /**
  * Employee badge hanging from a lanyard that continues the hero thread. The strap is always there;
  * the card drops down it once you've scrolled the strap top up to the top third of the screen, then swings on landing.
@@ -28,8 +37,11 @@ export default function IdCard({ imageSrc, altText, name, role, id, checklist }:
   const ref = useRef<HTMLDivElement>(null);
   const [flipped, setFlipped] = useState(false);
   const [hovering, setHovering] = useState(false);
-  // Becomes true once (and stays) when the strap top rises past 30% of the viewport.
+  // True while the card is dropping or hanging. Set when the strap top rises past 30% of the viewport
+  // with the card on screen; cleared again if the card leaves the screen before it has landed, so a
+  // fast scroll past the section doesn't burn the drop while nobody's looking.
   const [dropped, setDropped] = useState(reduce);
+  const [landed, setLanded] = useState(reduce);
 
   // Cursor offset from the card centre, -1..1
   const mx = useMotionValue(0);
@@ -43,6 +55,20 @@ export default function IdCard({ imageSrc, altText, name, role, id, checklist }:
   const leanX = useTransform(sy, [-1, 1], [6, -6]); // lean toward the cursor
   const scrollX = useTransform(ss, [-1, 1], [-14, 14]); // perspective tilt while scrolling
   const rotateX = useTransform(() => leanX.get() + scrollX.get());
+
+  // Drop timeline. One set of motion values so the strap stretch, the card's fall and the jolt stay in sync.
+  const strapRef = useRef<HTMLSpanElement>(null);
+  const strapBase = useMotionValue(reduce ? 1 : 0); // strap whipping down from the hero thread
+  const dropY = useMotionValue(reduce ? 0 : DROP_FROM);
+  const dropOpacity = useMotionValue(reduce ? 1 : 0);
+  const jolt = useMotionValue(0); // clip rattle on the catch, degrees
+  const squash = useMotionValue(1); // stretch while falling, compress on the catch
+  // Past its rest point the card pulls the strap with it, so the strap bottom stays on the clip.
+  const strapScaleY = useTransform(() => {
+    const over = Math.max(0, dropY.get());
+    const h = strapRef.current?.offsetHeight || 192;
+    return strapBase.get() * (1 + over / h);
+  });
 
   // Scroll → tilt. Decays back to 0 when scrolling stops.
   useEffect(() => {
@@ -70,7 +96,8 @@ export default function IdCard({ imageSrc, altText, name, role, id, checklist }:
     let raf = 0;
     const check = () => {
       raf = 0;
-      if (el.getBoundingClientRect().top <= window.innerHeight * 0.3) {
+      const r = el.getBoundingClientRect();
+      if (r.top <= window.innerHeight * 0.3 && r.bottom > 0) {
         setDropped(true);
         window.removeEventListener("scroll", onScroll);
       }
@@ -85,6 +112,18 @@ export default function IdCard({ imageSrc, altText, name, role, id, checklist }:
     };
   }, [dropped]);
 
+  // Re-arm: if the card scrolls fully out of view mid-drop, reset so it drops again when it comes back.
+  useEffect(() => {
+    if (reduce || !dropped || landed) return;
+    const el = ref.current;
+    if (!el) return;
+    const io = new IntersectionObserver(([entry]) => {
+      if (!entry.isIntersecting) setDropped(false);
+    });
+    io.observe(el);
+    return () => io.disconnect();
+  }, [reduce, dropped, landed]);
+
   const onMove = (e: React.PointerEvent<HTMLDivElement>) => {
     if (reduce || !ref.current) return;
     const r = ref.current.getBoundingClientRect();
@@ -98,31 +137,68 @@ export default function IdCard({ imageSrc, altText, name, role, id, checklist }:
 
   const showBack = flipped || hovering;
 
-  // Landing kick: nudge the pendulum so the card swings once after it drops.
-  const onLanded = () => {
-    if (reduce) return;
-    mx.set(0.9);
-    window.setTimeout(() => mx.set(0), 160);
-  };
+  // Runs the drop once. Free fall → the strap snaps taut (overshoot, stretch, rattle) → it settles and swings.
+  useEffect(() => {
+    if (!dropped || reduce) return;
+    let cancelled = false;
+    const controls = [
+      animate(strapBase, [0, 1.12, 0.97, 1], { duration: 0.55, times: [0, 0.5, 0.8, 1], ease: [0.2, 0.9, 0.2, 1] }),
+      animate(dropY, dropKeyframes, {
+        delay: DROP_DELAY,
+        duration: DROP_DURATION,
+        times: dropTimes,
+        ease: [...dropEase],
+        onComplete: () => {
+          if (!cancelled) setLanded(true);
+        },
+      }),
+      animate(dropOpacity, [0, 1], { delay: DROP_DELAY, duration: 0.35, ease: "easeIn" }),
+      animate(squash, [1, 1.05, 0.91, 1.03, 0.99, 1], {
+        delay: DROP_DELAY,
+        duration: DROP_DURATION,
+        times: [0, CATCH_AT - 0.02, CATCH_AT + 0.04, CATCH_AT + 0.14, CATCH_AT + 0.26, 1],
+        ease: ["easeIn", "easeOut", "easeOut", "easeInOut", "easeOut"],
+      }),
+      animate(jolt, [0, 0, -3, 2.4, -1.4, 0.6, 0], {
+        delay: DROP_DELAY,
+        duration: DROP_DURATION,
+        times: [0, CATCH_AT, CATCH_AT + 0.04, CATCH_AT + 0.1, CATCH_AT + 0.17, CATCH_AT + 0.25, 1],
+        ease: "easeOut",
+      }),
+    ];
+    // Pendulum kick at the moment of the catch, so the whole thing swings after the jolt.
+    const kick = window.setTimeout(() => {
+      mx.set(0.9);
+      window.setTimeout(() => mx.set(0), 160);
+    }, (DROP_DELAY + CATCH_AT * DROP_DURATION) * 1000);
+    return () => {
+      cancelled = true;
+      controls.forEach((c) => c.stop());
+      window.clearTimeout(kick);
+      // Back to the held state for a replay (no-op after unmount).
+      strapBase.set(0);
+      dropY.set(DROP_FROM);
+      dropOpacity.set(0);
+      squash.set(1);
+      jolt.set(0);
+      mx.set(0);
+    };
+  }, [dropped, reduce, strapBase, dropY, dropOpacity, squash, jolt, mx]);
 
   return (
     <div className="idcard" ref={ref} onPointerMove={onMove} onPointerLeave={onLeave}>
       <motion.div className="idcard__hang" style={reduce ? undefined : { rotateZ }}>
-        {/* Tension: the strap whips down and overshoots, then the card falls on a heavy, under-damped spring. */}
+        {/* The strap whips down first; once the card overshoots, the strap stretches with it and snaps back. */}
         <motion.span
+          ref={strapRef}
           className="idcard__strap"
           aria-hidden="true"
-          initial={reduce ? false : { scaleY: 0 }}
-          animate={reduce ? { scaleY: 1 } : { scaleY: dropped ? [0, 1.12, 0.97, 1] : 0 }}
-          transition={{ duration: 0.55, times: [0, 0.5, 0.8, 1], ease: [0.2, 0.9, 0.2, 1] }}
+          style={reduce ? undefined : { scaleY: strapScaleY }}
         />
 
         <motion.div
           className="idcard__drop"
-          initial={reduce ? false : { y: -420, opacity: 0 }}
-          animate={dropped ? { y: 0, opacity: 1 } : { y: -420, opacity: 0 }}
-          transition={{ type: "spring", stiffness: 58, damping: 7.5, mass: 1.4, delay: 0.3 }}
-          onAnimationComplete={() => dropped && onLanded()}
+          style={reduce ? undefined : { y: dropY, opacity: dropOpacity, scaleY: squash, rotateZ: jolt }}
         >
           <span className="idcard__clip" aria-hidden="true" />
 

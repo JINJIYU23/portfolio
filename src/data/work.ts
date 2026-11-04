@@ -12,7 +12,7 @@ const workItems: ProjectItem[] = [
     icon: LuMicroscope,
     company: "바이언스 (VIENCE)",
     position: "연구개발 프론트엔드 개발자",
-    date: "2025.09 - 2026.09",
+    date: "2025.09 - 진행중",
     tech: [
       "React 19",
       "TypeScript",
@@ -80,9 +80,21 @@ const workItems: ProjectItem[] = [
             name: null,
             details: [
               "로그인 후 첫 화면을 AI Assistant 랜딩으로 재정의. 좌측 채팅과 우측 컨텍스트 뷰(기본 대시보드 ↔ 어시스턴트 생성 요약 패널)가 대화 흐름에 따라 전환되는 2컬럼 구조 설계·구현",
-              "Server-Driven UI 응답 계약 설계: 블록 5종 + 표 컬럼 타입 7종",
-              "위젯 4종을 레지스트리 기반 반응형 그리드로 구성하고 데이터 Provider 공유로 API 중복 호출 제거",
-              "CSS 변수 디자인 토큰을 Tailwind에 매핑하고 Vitest + Testing Library 테스트 기반 도입",
+              "어시스턴트 응답이 화면 구성을 블록 목록으로 전달하는 Server-Driven UI 응답 계약 설계. 블록 5종과 표 컬럼 타입 7종의 조합만으로 프론트 수정 없이 새 요약 화면 추가 가능",
+              "위젯 4종을 레지스트리 기반 반응형 그리드로 구성하고, 데이터 Provider 공유로 API 중복 호출 제거",
+              "CSS 변수 디자인 토큰을 Tailwind에 매핑. Vitest + Testing Library 테스트 기반을 도입",
+            ],
+          },
+        ],
+      },
+      {
+        title: "관리자 대시보드",
+        tasks: [
+          {
+            name: null,
+            details: [
+              "계정, 권한, 감사 로그, 공유 자원 관리 총 4개 도메인을 연동한 관리자 화면 5개 설계·구현 (역할별 접근 분기, 감사 로그, 공유 자원 버전 관리 등)",
+              "모달 흐름과 권한 분기를 테스트 157개로 검증해 역할 규칙이 바뀔 때도 안전하게 수정할 수 있는 구조 확보",
             ],
           },
         ],

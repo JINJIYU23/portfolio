@@ -1,7 +1,7 @@
 /* About: lanyard ID card. Paper tokens only; accent = strap + checkmarks. */
 .idcard {
   --card-w: 17rem;
-  --card-h: 25rem;
+  --card-h: 27rem; /* enough for the 10.5rem photo plus the text block without overflow */
   --strap-h: 12rem;
   position: relative;
   width: var(--card-w);
@@ -26,7 +26,7 @@
   border-radius: 0 0 var(--cord-w) var(--cord-w);
   /* starts flush at the section's top edge, where the hero thread leaves off */
 }
-.idcard__drop { display: grid; justify-items: center; will-change: transform; }
+.idcard__drop { display: grid; justify-items: center; transform-origin: 50% 0; will-change: transform; }
 .idcard__clip {
   width: 1.6rem; height: 0.9rem; margin-top: -0.25rem;
   background: linear-gradient(180deg, oklch(78% 0.006 290), oklch(55% 0.006 290));
@@ -56,6 +56,12 @@
   text-align: center;
   transition: background-color var(--dur-short) var(--ease-out);
 }
+/* Front: the photo takes whatever height is left so the name/role/barcode/id block stays inside the card
+ * at every card size, instead of overflowing past the bottom edge. */
+.idcard__front {
+  align-content: stretch;
+  grid-template-rows: auto auto minmax(0, 1fr) auto auto auto auto;
+}
 .idcard__back { transform: rotateY(180deg); justify-items: start; text-align: start; }
 
 .idcard__hole {
@@ -68,9 +74,9 @@
 .idcard__back .idcard__label { justify-self: start; margin-block-start: var(--space-xs); }
 
 .idcard__photo {
-  width: 10.5rem; height: 10.5rem; object-fit: cover; border-radius: 16px;
+  width: auto; height: auto; aspect-ratio: 1; max-width: 10.5rem; max-height: 100%; min-height: 0;
+  align-self: center; object-fit: cover; border-radius: 16px;
   border: var(--rule-hair) solid var(--color-rule-2);
-  margin-block-start: var(--space-xs);
 }
 .idcard__name { font-family: var(--font-display); font-weight: 700; font-size: var(--text-xl); letter-spacing: -0.02em; margin-block-start: var(--space-sm); color: var(--color-ink); }
 .idcard__role { font-size: var(--text-sm); color: var(--color-ink-2); }
@@ -101,11 +107,11 @@
   .idcard__card:hover .idcard__face { background: var(--color-paper-3); }
 }
 @media (max-width: 40rem) {
-  .idcard { --card-w: 15rem; --card-h: 22rem; --strap-h: 5rem; }
+  .idcard { --card-w: 15rem; --card-h: 24.5rem; --strap-h: 5rem; }
   /* no hero thread on phones: fade the strap top so it reads as coming from off-screen */
   .idcard__strap {
     mask-image: linear-gradient(to bottom, transparent, black 25%);
     -webkit-mask-image: linear-gradient(to bottom, transparent, black 25%);
   }
-  .idcard__photo { width: 8.5rem; height: 8.5rem; }
+  .idcard__photo { max-width: 8.5rem; }
 }
