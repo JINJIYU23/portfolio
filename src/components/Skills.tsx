@@ -1,28 +1,34 @@
 import { useId, useState } from "react";
 import SectionLayout from "../layout/SectionLayout";
 import Reveal from "./Reveal";
-import Figma from "../assets/images/figma.png";
-import Git from "../assets/images/git.png";
-import Github from "../assets/images/github.png";
-import Js from "../assets/images/js.png";
-import Next from "../assets/images/next.png";
-import ReactImg from "../assets/images/react.png";
-import Slack from "../assets/images/slack.png";
-import Supabase from "../assets/images/supabase.png";
-import Tailwind from "../assets/images/tailwind.png";
-import Tanstack from "../assets/images/tanstack.png";
-import Ts from "../assets/images/ts.png";
-import Vite from "../assets/images/vite.png";
+import Claude from "../assets/images/claude.svg";
+import D3 from "../assets/images/d3.svg";
+import Figma from "../assets/images/figma.svg";
+import Git from "../assets/images/git.svg";
+import Github from "../assets/images/github.svg";
+import Js from "../assets/images/js.svg";
+import Next from "../assets/images/next.svg";
+import Onnx from "../assets/images/onnx.svg";
+import OpenSeadragon from "../assets/images/openseadragon.svg";
+import ReactImg from "../assets/images/react.svg";
+import Supabase from "../assets/images/supabase.svg";
+import Tailwind from "../assets/images/tailwind.svg";
+import Tanstack from "../assets/images/tanstack.svg";
+import Ts from "../assets/images/ts.svg";
+import Vega from "../assets/images/vega.svg";
+import Vite from "../assets/images/vite.svg";
+import Vitest from "../assets/images/vitest.svg";
+import WebGL from "../assets/images/webgl.svg";
 import Zustand from "../assets/images/zustand.png";
 
-type Group = "lang" | "front" | "back" | "tool";
+type Group = "lang" | "front" | "data" | "back" | "tool";
 
 interface Cell {
   symbol: string;
   name: string;
   src: string;
   group: Group;
-  /** 1-based grid position in the 7×2 table. */
+  /** 1-based grid position in the 7×3 table. */
   col: number;
   row: number;
 }
@@ -31,11 +37,13 @@ const GROUPS: { id: Group | "all"; label: string }[] = [
   { id: "all", label: "All" },
   { id: "lang", label: "Languages" },
   { id: "front", label: "Frontend" },
+  { id: "data", label: "Data / AI" },
   { id: "back", label: "Backend" },
   { id: "tool", label: "Tools" },
 ];
 
-// Periodic-table layout: languages on the left edge, frontend across the top, tools along the bottom, backend on the right.
+// Periodic-table layout: languages on the left edge, frontend across the top, tools along the middle row,
+// backend on the right, and the Data / AI row (visualisation, deep zoom, in-browser inference) along the bottom.
 const ELEMENTS: Cell[] = [
   { symbol: "Js", name: "JavaScript", src: Js, group: "lang", col: 1, row: 1 },
   { symbol: "Ts", name: "TypeScript", src: Ts, group: "lang", col: 1, row: 2 },
@@ -49,12 +57,19 @@ const ELEMENTS: Cell[] = [
   { symbol: "Gi", name: "Git", src: Git, group: "tool", col: 2, row: 2 },
   { symbol: "Gh", name: "GitHub", src: Github, group: "tool", col: 3, row: 2 },
   { symbol: "Fg", name: "Figma", src: Figma, group: "tool", col: 4, row: 2 },
-  { symbol: "Sl", name: "Slack", src: Slack, group: "tool", col: 5, row: 2 },
+  { symbol: "Cc", name: "Claude Code", src: Claude, group: "tool", col: 5, row: 2 },
+  { symbol: "Vt", name: "Vitest", src: Vitest, group: "tool", col: 6, row: 2 },
+  { symbol: "D3", name: "D3", src: D3, group: "data", col: 2, row: 3 },
+  { symbol: "Vg", name: "Vega-Lite", src: Vega, group: "data", col: 3, row: 3 },
+  { symbol: "Os", name: "OpenSeadragon", src: OpenSeadragon, group: "data", col: 4, row: 3 },
+  { symbol: "On", name: "ONNX Runtime", src: Onnx, group: "data", col: 5, row: 3 },
+  { symbol: "Gl", name: "WebGL", src: WebGL, group: "data", col: 6, row: 3 },
 ];
 
 const GROUP_LABEL: Record<Group, string> = {
   lang: "Language",
   front: "Frontend",
+  data: "Data / AI",
   back: "Backend / BaaS",
   tool: "Tool",
 };
