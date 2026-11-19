@@ -1,4 +1,5 @@
 import useActiveSection from "../hooks/useActiveSection";
+import { scrollToContact } from "../lib/scrollStore";
 
 const LINKS = [
   { id: "experience", label: "Experience" },
@@ -6,7 +7,6 @@ const LINKS = [
   { id: "skills", label: "Skills" },
   { id: "work", label: "Work" },
   { id: "projects", label: "Projects" },
-  { id: "moments", label: "Moments" },
 ];
 const IDS = LINKS.map((l) => l.id).concat("contact");
 
@@ -27,7 +27,19 @@ export default function Nav() {
           </li>
         ))}
       </ul>
-      <a className="nav-pill__cta" href="#contact" aria-current={active === "contact" ? "true" : undefined}>
+      <a
+        className="nav-pill__cta"
+        href="#contact"
+        aria-current={active === "contact" ? "true" : undefined}
+        onClick={(e) => {
+          // Land past the pinned title transition. stopPropagation keeps Lenis's own window-level anchor
+          // handler from re-targeting the section top afterwards.
+          if (scrollToContact()) {
+            e.preventDefault();
+            e.stopPropagation();
+          }
+        }}
+      >
         Contact
       </a>
     </nav>

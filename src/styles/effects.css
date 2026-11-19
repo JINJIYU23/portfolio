@@ -1,6 +1,6 @@
 /* Motion & effect add-ons layered on hallmark.css:
  * reveal · eyebrow/accent titles · nav scroll-spy · hero parallax + lanyard thread · periodic table ·
- * work accordion · timeline · proud-moments horizontal scroll · contact band.
+ * work accordion · timeline · contact pinned title hand-off + band.
  * ID card lives in IdCard.css. */
 
 /* ---------- scroll reveal ---------- */
@@ -75,6 +75,7 @@
 .ptable__cell[data-group="lang"]  .ptable__btn { background: color-mix(in oklch, var(--color-accent) 22%, var(--color-paper-2)); box-shadow: inset 0 2px 0 var(--color-accent); }
 .ptable__cell[data-group="front"] .ptable__btn { background: color-mix(in oklch, var(--color-bloom-2) 12%, var(--color-paper-2)); box-shadow: inset 0 2px 0 var(--color-bloom-2); }
 .ptable__cell[data-group="back"]  .ptable__btn { box-shadow: inset 0 2px 0 oklch(78% 0.14 145); }
+.ptable__cell[data-group="data"]  .ptable__btn { background: color-mix(in oklch, oklch(80% 0.14 75) 10%, var(--color-paper-2)); box-shadow: inset 0 2px 0 oklch(80% 0.14 75); }
 .ptable__cell[data-group="tool"]  .ptable__btn { box-shadow: inset 0 2px 0 var(--color-rule-2); }
 .ptable__panel {
   display: grid; justify-items: center; gap: var(--space-2xs); padding: var(--space-lg);
@@ -205,39 +206,25 @@
 }
 @media (prefers-reduced-motion: reduce) { .tl__year, .tl__dot, .tl__card { opacity: 1; translate: none; transition: none; } .xp-spine { scale: 1 1; } }
 
-/* ---------- proud moments · pinned horizontal scroll ---------- */
-.section--moments { max-width: none; padding-inline: 0; overflow: clip; }
-.section--moments .head-hang { padding-inline: var(--page-gutter); }
-.mo { position: relative; display: flex; align-items: center; min-height: 60vh; padding-block: var(--space-lg); }
-.mo__track { display: flex; gap: var(--space-md); list-style: none; margin: 0; padding: 0 var(--page-gutter); width: max-content; will-change: transform; }
-.mo__card {
-  --glow: var(--color-accent);
-  flex: 0 0 auto; width: clamp(15rem, 22vw, 19rem); min-height: 17rem;
-  display: grid; align-content: start; gap: var(--space-2xs); padding: var(--space-lg);
-  background: var(--color-paper-2); border: var(--rule-hair) solid var(--color-rule); border-radius: var(--radius-glass);
-}
-.mo__icon { display: grid; place-items: center; width: 2.75rem; height: 2.75rem; border-radius: 12px; background: var(--color-paper); color: var(--color-ink-2); font-size: 1.35rem; margin-block-end: var(--space-md); transition: color var(--dur-short) var(--ease-out), box-shadow var(--dur-short) var(--ease-out), background-color var(--dur-short) var(--ease-out); }
-@media (hover: hover) { .mo__card:hover .mo__icon { color: var(--glow); background: color-mix(in oklch, var(--glow) 14%, var(--color-paper)); box-shadow: 0 0 0 1px color-mix(in oklch, var(--glow) 40%, transparent), 0 0 28px color-mix(in oklch, var(--glow) 45%, transparent); } }
-.mo__num { font-family: var(--font-display); font-weight: 700; font-size: clamp(2.5rem, 4vw, 3.5rem); letter-spacing: -0.04em; line-height: 1; color: var(--color-ink); font-variant-numeric: tabular-nums; }
-.mo__suffix { font-family: var(--font-accent); font-style: italic; font-weight: 400; font-size: 0.5em; color: var(--color-muted); margin-inline-start: 0.15em; letter-spacing: 0; }
-.mo__label { font-weight: 600; color: var(--color-ink); margin-block-start: var(--space-xs); }
-.mo__note { font-size: var(--text-sm); color: var(--color-muted); }
-.mo__card--end { background: transparent; border-style: dashed; align-content: center; justify-items: start; gap: var(--space-md); }
-.mo__end { font-family: var(--font-display); font-weight: 700; font-size: var(--text-2xl); letter-spacing: -0.03em; line-height: 1.1; color: var(--color-ink); }
-.mo__end em { font-family: var(--font-accent); font-style: italic; font-weight: 400; color: var(--color-accent); }
-.mo__arrow { display: grid; place-items: center; width: 3rem; height: 3rem; border-radius: 50%; background: var(--color-accent); color: var(--color-accent-ink); font-size: 1.25rem; transition: transform var(--dur-micro) var(--ease-out); }
-@media (hover: hover) { .mo__arrow:hover { transform: translateX(3px); } }
-/* narrow / reduced motion: native horizontal scroller */
-@media (max-width: 56rem), (prefers-reduced-motion: reduce) {
-  .mo { min-height: 0; overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x proximity; scrollbar-width: none; }
-  .mo::-webkit-scrollbar { display: none; }
-  .mo__track { transform: none !important; }
-  .mo__card { scroll-snap-align: start; }
-}
-
 /* ---------- contact · statement + sliding band ---------- */
-.section--contact { min-height: 100svh; display: grid; align-content: center; }
-.section--contact .head-hang h2 { font-size: clamp(2.5rem, 6vw + 0.5rem, 5.5rem); max-width: 14ch; margin-inline: auto; }
+/* The stage is pinned for ~100vh (GSAP ScrollTrigger). Two headers share one box: A "and counting." lies absolutely over B;
+ * B is in flow, so the box is always two title lines tall and nothing jumps when they swap. The list fades in with B.
+ * Reduced motion: no pin, no A, everything static. */
+.section.section--contact { padding-block-start: 0; } /* beats .section in hallmark.css, which loads after this file */
+.contact-stage { min-height: 100svh; display: grid; align-content: center; }
+.contact-head { position: relative; }
+.contact-head__a { position: absolute; inset: 0; display: grid; align-content: center; will-change: transform, opacity; }
+.contact-head__b { will-change: transform, opacity; }
+.section--contact .head-hang h2,
+.section--contact .contact-head__title { font-family: var(--font-display); font-weight: 700; font-size: clamp(2.5rem, 6vw + 0.5rem, 5.5rem); line-height: 1.05; letter-spacing: -0.02em; color: var(--color-ink); max-width: 14ch; margin: 0 auto; }
+.section--contact .head-hang h2 { text-wrap: balance; }
+.section--contact .contact { will-change: transform, opacity; }
+@media (max-width: 40rem) {
+  /* Phone: clear the floating nav and tighten the stack so the finished state fits in one pinned viewport. */
+  .contact-stage { padding-block-start: 5rem; }
+  .section--contact .contact { gap: var(--space-md); }
+  .section--contact .contact__list { margin-block-start: var(--space-xs); }
+}
 .contact__list { position: relative; }
 .contact__band { position: absolute; left: calc(-1 * var(--space-sm)); right: calc(-1 * var(--space-sm)); top: 0; height: 0; opacity: 0; border-radius: var(--radius-input); background: color-mix(in oklch, var(--color-accent) 16%, transparent); pointer-events: none; transition: top 320ms var(--ease-out), height 320ms var(--ease-out), opacity var(--dur-short) var(--ease-out); z-index: 0; }
 .contact__row { position: relative; z-index: 1; }
